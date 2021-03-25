@@ -1,7 +1,8 @@
+const fs = require('fs');
 const inquirer = require('inquirer');
+const generatePage = require('./src/page-template');
 
 const promptUser = () => {
-
 
 return inquirer.prompt([
         {
@@ -19,15 +20,12 @@ return inquirer.prompt([
             name: 'about',
             message: 'Provide some information about yourself:'
         }
+
     ]);
 
 };
 
 const promptProject = portfolioData => {
-
-    if (!portfolioData.projects) {
-        portfolioData.projects = [];
-    }
 
     console.log(`
     
@@ -36,6 +34,10 @@ Add a New Project
 =================
 
     `);
+
+    if (!portfolioData.projects) {
+        portfolioData.projects = [];
+    }
 
     return inquirer.prompt([
 
@@ -73,18 +75,19 @@ Add a New Project
             message: 'Would you like to enter another project?',
             default: false
         }
-    
 
-        .then(projectData => {
-            portfolioData.projects.push(projectData);
-            if (projectData.confirmAddProject) {
-                return promptProject(portfolioData);
-            } else {
-                return portfolioData;
-            }
-        })
 
-    ]);
+    ])
+
+    .then(projectData => {
+        portfolioData.projects.push(projectData);
+        if (projectData.confirmAddProject) {
+            return promptProject(portfolioData);
+        } else {
+            return portfolioData;
+        }
+    });
+
 
 };
 
